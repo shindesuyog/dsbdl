@@ -1,0 +1,507 @@
+assignment no 1:
+
+#data wrangling
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+
+data = pd.read_csv("Iris.csv")
+
+data.head(10)
+
+data.shape
+
+data.isnull()
+
+data.isnull().sum()
+
+data.describe()
+
+data.ndim
+
+data.dtypes
+
+data.info()
+
+data["Species"].value_counts()
+
+le = LabelEncoder()
+
+data.Species = le.fit_transform(data.Species)
+
+data
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+scaled_data = scaler.fit_transform(data)
+print(scaled_data)
+
+
+from sklearn import preprocessing
+
+
+data_standardized =  preprocessing.scale(data)
+data_scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
+
+data_scaled1 = data_scaler.fit_transform(data)
+print(data_scaled1)
+
+
+assignment no 2
+
+DSBDAL Assignment 2
+
+#Data Wrangling II create an acadmic data set
+
+import pandas as pd
+import numpy as np
+
+x = pd.read_csv('response_data.csv')
+
+x.head()
+
+x.head(10)
+
+df = pd.DataFrame(x)
+
+df
+
+df.info()
+
+df.describe()
+
+df['School ID']
+
+df['Q1(%)']
+
+df['School ID'].value_counts()
+
+df['Q1(%)'].value_counts()
+
+df['Q1(%)'].min()
+
+df['Q1(%)'].max()
+
+df['Q1(%)'].unique()
+
+df[df['Q1(%)'] == df['Q1(%)'].min()]['School ID']
+
+
+assignment no 3:
+
+# descriptive statustic measure central tendanvy and variability
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv("Iris.csv")
+df.head()
+
+
+SepalL = df["SepalLengthCm"].mean()
+SepalL
+
+df.describe()
+
+SepalL = df["SepalLengthCm"].count()
+SepalL
+
+SepalL = df["SepalLengthCm"].min()
+SepalL
+
+SepalL = df["SepalLengthCm"].max()
+SepalL
+
+SepalW = df["SepalWidthCm"].std()
+SepalW
+
+SepalW = df["SepalWidthCm"].mean()
+SepalW
+
+SepalW = df["SepalWidthCm"].max()
+SepalW
+
+SepalW = df["SepalWidthCm"].min()
+SepalW
+
+#3b
+df1 = pd.read_csv("/content/HR.csv")
+df1.head()
+
+
+print("mean",df1.loc[:,["MonthlyIncome","Age","DistanceFromHome"]].mean())
+
+df1["BusinessTravel"].replace({"Travel_Rarely":1,"Travel_Frequently":0},inplace=True)
+df1.head()
+
+df1["BusinessTravel"].replace({"Travel_Rarely":1,"Travel_Frequently":0},inplace=False)
+df1.head()
+
+df1["Attrition"].replace({"Yes":1,"No":0},inplace=True)
+df1.head()
+
+assignment no 4:
+
+
+
+```
+`# This is formatted as code`
+```
+
+
+
+DSBDAL Assignment 4
+
+#batson housing dataset
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import warnings
+%matplotlib inline
+
+from sklearn.datasets import load_boston
+
+boston_dataset = load_boston()
+boston_dataset.keys()
+
+boston = pd.DataFrame(boston_dataset.data, columns=boston_dataset.feature_names)
+boston.head()
+
+boston['MEDV'] = boston_dataset.target
+
+boston.isnull().sum()
+
+sns.set(rc={'figure.figsize':(11.7,8.27)})
+
+sns.distplot(boston['MEDV'],bins=30)
+plt.show()
+
+correlation_matrix = boston.corr().round(2)
+
+sns.heatmap(data=correlation_matrix, annot = True)
+
+X = pd.DataFrame(np.c_[boston['LSTAT'],boston['RM']], columns=['LSTAT','RM'])
+Y = boston['MEDV']
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2, random_state = 42)
+
+print(X_train.shape)
+print(X_test.shape)
+print(Y_train.shape)
+print(Y_test.shape)
+
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+lin_model = LinearRegression()
+lin_model.fit(X_train,Y_train)
+
+y_train_predict = lin_model.predict(X_train)
+rmse = (np.sqrt(mean_squared_error(Y_train,y_train_predict)))
+r2 = r2_score(Y_train,y_train_predict)
+
+print("The model performance for training set")
+print("------------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+print("\n")
+
+y_test_predict = lin_model.predict(X_test)
+rmse = (np.sqrt(mean_squared_error(Y_test,y_test_predict)))
+r2 = r2_score(Y_test,y_test_predict)
+
+print("The model performance for testing set")
+print("------------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+print("\n")
+
+plt.scatter(Y_test, y_test_predict)
+plt.show()
+
+assignment 5:
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+dataset = pd.read_csv("User_Data.csv")
+#input
+x = dataset.iloc[:, [2, 3]].values
+# output
+y = dataset.iloc[:, 4].values
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest = train_test_split(
+x, y, test_size = 0.25, random_state = 0)
+from sklearn.preprocessing import StandardScaler
+sc_x = StandardScaler()
+xtrain = sc_x.fit_transform(xtrain)
+xtest = sc_x.transform(xtest)
+print (xtrain[0:10, :])
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0)
+classifier.fit(xtrain, ytrain)
+y_pred = classifier.predict(xtest)
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(ytest, y_pred)
+from sklearn.metrics import accuracy_score
+print ("Accurancy :",accuracy_score(ytest, y_pred))
+from sklearn.metrics import confusion_matrix
+tn=confusion_matrix(ytest,y_pred).ravel()
+tn
+
+
+
+assignment no 6:
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset=pd.read_csv("/content/Iris (1).csv")
+print(dataset)
+
+x=dataset.iloc[:,:4].values
+y=dataset.iloc[:,:5].values
+
+dataset.head(5)
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+dataset
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+x_train=sc.fit_transform(x_train)
+x_test=sc.transform(x_test)
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_csv("/content/Iris (1).csv")
+
+print(dataset)
+
+X = dataset.iloc[:,:4].values
+y = dataset.iloc[:,5].values
+
+dataset.head(5)
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+
+y_pred = classifier.predict(X_test) 
+y_pred
+
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print ("Confusion Matrix : \n", cm)
+
+from sklearn.metrics import accuracy_score 
+print ("Accuracy : ", accuracy_score(y_test, y_pred))
+cm
+
+df = pd.DataFrame({'Real Values':y_test, 'Predicted Values':y_pred})
+df
+
+
+assignment no 7:
+
+
+DSBDAL Assignment 7
+
+#text analytics tf idf
+import nltk
+nltk.download('punkt')
+
+from nltk.tokenize import sent_tokenize 
+text = "Hello everyone. Welcome to NLP and the NLTK module introduction" 
+sent_tokenize(text)
+
+from nltk.tokenize import word_tokenize 
+text = "Hello everyone. Welcome to NLP and the NLTK module introduction" 
+word_tokenize(text)
+
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+stop_words = set(stopwords.words('english'))
+
+txt = "Sukanya, Rajib and Naba are my good friends. " \
+    "Sukanya is getting married next year. " \
+    "Marriage is a big step in one’s life." \
+    "It is both exciting and frightening. " \
+    "But friendship is a sacred bond between people." \
+    "It is a special kind of love between us. " \
+    "Many of you must have tried searching for a friend "\
+    "but never found the right one."
+
+tokenized = sent_tokenize(txt)
+
+for i in tokenized:
+     
+    # Word tokenizers is used to find the words
+    # and punctuation in a string
+    wordsList = nltk.word_tokenize(i)
+    wordsList = [w for w in wordsList if not w in stop_words]
+    #  Using a Tagger. Which is part-of-speech
+    # tagger or POS-tagger.
+    tagged = nltk.pos_tag(wordsList)
+ 
+    print(tagged)
+
+nltk.download('wordnet')
+# import these modules
+from nltk.stem import WordNetLemmatizer
+
+lemmatizer = WordNetLemmatizer()
+
+print("rocks :", lemmatizer.lemmatize("rocks"))
+print("corpora :", lemmatizer.lemmatize("corpora"))
+
+# a denotes adjective in "pos"
+print("better :", lemmatizer.lemmatize("better", pos ="a"))
+
+import nltk
+from nltk.stem import PorterStemmer
+words=['done','doing','studying','identify','this']
+ps=PorterStemmer( )
+
+for word in words:
+    print(f"{word}: {ps.stem(word)}")
+
+# import required module
+from sklearn.feature_extraction.text import TfidfVectorizer
+# assign documents
+d0 = 'Geeks for geeks'
+d1 = 'Geeks'
+d2 = 'r2j'
+
+# merge documents into a single corpus
+string = [d0, d1, d2]
+
+# create object
+tfidf = TfidfVectorizer()
+
+# get tf-df values
+result = tfidf.fit_transform(string)
+
+# get idf values
+print('\nidf values:')
+for ele1, ele2 in zip(tfidf.get_feature_names(), tfidf.idf_):
+    print(ele1, ':', ele2)
+
+# get indexing
+print('\nWord indexes:')
+print(tfidf.vocabulary_)
+
+# display tf-idf values
+print('\ntf-idf value:')
+print(result)
+
+# in matrix form
+print('\ntf-idf values in matrix form:')
+print(result.toarray())
+
+
+assignment no 8:
+
+
+#data visualisation 1
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+dataset=sns.load_dataset('titanic')
+dataset.head()
+
+
+
+
+sns.distplot(dataset['fare'])
+
+sns.distplot(dataset['fare'],kde=False)
+
+sns.distplot(dataset['fare'],kde=False,bins=10)
+
+sns.jointplot(x='age',y='fare',data=dataset)
+
+sns.jointplot(x='age',y='fare',data=dataset ,kind='hex')
+
+
+assignment no 9
+
+
+#data visualization 2
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+dataset=sns.load_dataset('titanic')
+dataset.head()
+
+sns.barplot(x='sex',y='age',data=dataset,estimator=np.std)
+
+sns.countplot(x='sex',data=dataset)
+
+sns.boxplot(x='sex',y='age',data=dataset)
+
+sns.boxplot(x='sex',y='age',data=dataset,hue="survived")
+
+sns.violinplot(x='sex',y='age',data=dataset)
+
+sns.stripplot(x='sex',y='age',data=dataset)
+
+sns.stripplot(x='sex',y='age',data=dataset,jitter=True,split=True,hue="survived")
+
+sns.violinplot(x='sex',y='age',data=dataset)
+sns.swarmplot(x='sex',y='age',data=dataset,color="black")
+
+
+
+# New Section
+
+
+
+assignment no 10:
+
+
+#data visualization 3
+
+import seaborn as sns
+dataset=sns.load_dataset('iris')
+dataset.head()
+
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(2,2,figsize=(16,9))
+sns.histplot(dataset['sepal_length'],ax=axes[0,0])
+sns.histplot(dataset['sepal_width'],ax=axes[0,1])
+sns.histplot(dataset['sepal_length'],ax=axes[1,0])
+sns.histplot(dataset['sepal_width'],ax=axes[1,1])
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(2,2,figsize=(16,9))
+sns.boxplot(y='petal_length',x='species',data=dataset,ax=axes[0,0])
+sns.boxplot(y='petal_width',x='species',data=dataset,ax=axes[0,1])
+sns.boxplot(y='petal_length',x='species',data=dataset,ax=axes[1,0])
+sns.boxplot(y='petal_width',x='species',data=dataset,ax=axes[1,1])
+
